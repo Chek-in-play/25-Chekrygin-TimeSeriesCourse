@@ -40,35 +40,26 @@ class PairwiseDistance:
 
 
     def _choose_distance(self):
-        """ Choose distance function for calculation of matrix
-        
-        Returns
-        -------
-        dict_func: function reference
-        """
-
-        dist_func = None
-
-        # INSERT YOUR CODE
-
-        return dist_func
-
+        if self.metric.lower() == "euclidean":
+            return norm_ED_distance if self.is_normalize else ED_distance
+        elif self.metric.lower() == "dtw":
+            return DTW_distance
+        else:
+            raise ValueError(f"Unsupported metric: {self.metric}")
 
     def calculate(self, input_data: np.ndarray) -> np.ndarray:
-        """ Calculate distance matrix
-        
-        Parameters
-        ----------
-        input_data: time series set
-        
-        Returns
-        -------
-        matrix_values: distance matrix
-        """
-        
-        matrix_shape = (input_data.shape[0], input_data.shape[0])
-        matrix_values = np.zeros(shape=matrix_shape)
-        
-        # INSERT YOUR CODE
+        input_data = np.array(input_data, dtype=float)
+        n = input_data.shape[0]
+        matrix_values = np.zeros((n, n))
+        dist_func = self._choose_distance()
+
+        for i in range(n):
+            xi = z_normalize(input_data[i]) if self.is_normalize and self.metric.lower() == "dtw" else input_data[i]
+            for j in range(i, n):
+                xj = z_normalize(input_data[j]) if self.is_normalize and self.metric.lower() == "dtw" else input_data[j]
+                dist = dist_func(xi, xj)
+                matrix_values[i, j] = dist
+                matrix_values[j, i] = dist
 
         return matrix_values
+
