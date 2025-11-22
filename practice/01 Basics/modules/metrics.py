@@ -12,7 +12,6 @@ def norm_ED_distance(ts1, ts2) -> float:
     ts1 = np.array(ts1, dtype=float)
     ts2 = np.array(ts2, dtype=float)
 
-    # Z-нормализация
     ts1 = (ts1 - ts1.mean()) / ts1.std()
     ts2 = (ts2 - ts2.mean()) / ts2.std()
 
@@ -25,7 +24,7 @@ def DTW_distance(ts1, ts2, r: float = 1) -> float:
     ts2 = np.array(ts2, dtype=float)
 
     n, m = len(ts1), len(ts2)
-    w = max(int(r * max(n, m)), abs(n - m))  # ограничение окна
+    w = max(int(r * max(n, m)), abs(n - m))  
 
     dtw = np.full((n + 1, m + 1), np.inf)
     dtw[0, 0] = 0

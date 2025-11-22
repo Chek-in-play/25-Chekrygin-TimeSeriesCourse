@@ -51,10 +51,10 @@ def plot_ts_set(ts_set: np.ndarray, title: str = 'Input Time Series Set') -> Non
                       legend=dict(font=dict(size=20, color='black'))
                       )
 
-    fig.show(renderer="colab")
+    fig.show()
 
 
-def mplot2d(x: np.ndarrray, y: np.ndarrray, plot_title: str = None, x_title: str = None, y_title: str = None, trace_titles: np.ndarray = None) -> None:
+def mplot2d(x: np.ndarray, y: np.ndarray, plot_title: str = None, x_title: str = None, y_title: str = None, trace_titles: np.ndarray = None) -> None:
     """
     Multiple 2D Plots on figure for different experiments
 
@@ -100,10 +100,10 @@ def mplot2d(x: np.ndarrray, y: np.ndarrray, plot_title: str = None, x_title: str
                       height=600
                       )
 
-    fig.show(renderer="colab")
+    fig.show()
 
 
-def plot_bestmatch_data(ts: np.ndarrray, query: np.ndarray) -> None:
+def plot_bestmatch_data(ts: np.ndarray, query: np.ndarray) -> None:
     """
     Visualize the input data (time series and query) for the best match task
 
@@ -146,24 +146,38 @@ def plot_bestmatch_data(ts: np.ndarrray, query: np.ndarray) -> None:
                       showlegend=False,
                       title_x=0.5)
 
-    fig.show(renderer="colab")
+    fig.show()
 
 
-def plot_bestmatch_results(ts: np.ndarrray, query: np.ndarrray, bestmatch_results: dict) -> None:
-    """
-    Visualize the best match results
+def plot_bestmatch_results(ts: np.ndarray, query: np.ndarray, bestmatch_results: dict) -> None:
+    query_len = len(query)
+    ts_len = len(ts)
+    
+    fig = make_subplots(rows=1, cols=2, column_widths=[0.2, 0.8], subplot_titles=("Query", "Time Series"))
+    
+    fig.add_trace(go.Scatter(x=np.arange(query_len), y=query, line=dict(color=px.colors.qualitative.Plotly[1])),
+                  row=1, col=1)
+    
+    fig.add_trace(go.Scatter(x=np.arange(ts_len), y=ts, line=dict(color=px.colors.qualitative.Plotly[0])),
+                  row=1, col=2)
+    
+    for idx in bestmatch_results.get('indices', []):
+        fig.add_trace(go.Scatter(
+            x=np.arange(idx, idx + query_len),
+            y=ts[idx:idx + query_len],
+            line=dict(color='red', width=3),
+            name='Best match'
+        ), row=1, col=2)
+    
+    fig.update_layout(plot_bgcolor="rgba(0,0,0,0)",
+                      paper_bgcolor="rgba(0,0,0,0)",
+                      showlegend=False,
+                      title="Best Match Visualization",
+                      title_x=0.5)
+    fig.show()
 
-    Parameters
-    ----------
-    ts: time series
-    query: query
-    bestmatch_results: output data found by the best match algorithm
-    """
 
-    # INSERT YOUR CODE
-
-
-def pie_chart(labels: np.ndarrray, values: np.ndarrray, plot_title='Pie chart') -> None:
+def pie_chart(labels: np.ndarray, values: np.ndarray, plot_title='Pie chart') -> None:
     """
     Build the pie chart
 
@@ -183,4 +197,4 @@ def pie_chart(labels: np.ndarrray, values: np.ndarrray, plot_title='Pie chart') 
                       height=500
                       )
 
-    fig.show(renderer="colab")
+    fig.show()
