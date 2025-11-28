@@ -5,7 +5,6 @@ import math
 import stumpy
 from stumpy import config
 
-
 def compute_mp(ts1: np.ndarray, m: int, exclusion_zone: int = None, ts2: np.ndarray = None):
     """
     Compute the matrix profile
@@ -22,12 +21,15 @@ def compute_mp(ts1: np.ndarray, m: int, exclusion_zone: int = None, ts2: np.ndar
     output: the matrix profile structure
             (matrix profile, matrix profile index, subsequence length, exclusion zone, the first and second time series)
     """
-    
-    # INSERT YOUR CODE
 
-    return {'mp': mp[:, 0],
-            'mpi': mp[:, 1],
-            'm' : m,
-            'excl_zone': exclusion_zone,
-            'data': {'ts1' : ts1, 'ts2' : ts2}
-            }
+    if ts2 is None:
+        mp_result = stumpy.stump(ts1, m)
+    else:
+        mp_result = stumpy.stump(ts1, m, T_B=ts2)
+
+    return {
+        'mp': mp_result[:, 0].astype(np.float64),  
+        'mpi': mp_result[:, 1].astype(np.int64),  
+        'm': m,  
+        'data': {'ts1': ts1, 'ts2': ts2}  
+    }
