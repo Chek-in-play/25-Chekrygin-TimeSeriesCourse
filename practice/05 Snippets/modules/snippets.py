@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-# Визуализация сниппетов
 def plot_snippets(ts, snippets):
     with plt.rc_context(
         {
